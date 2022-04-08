@@ -1,0 +1,5 @@
+1. User , bisa buat notes. (DONE)
+2. User bisa lihat notes all user. (DONE)
+3. User bisa lihat notes User by Id. (DONE)
+tapi Notes update/delete, hanya boleh ownernya.(DONE)
+4. User list (DONE).
