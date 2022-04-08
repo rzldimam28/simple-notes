@@ -1,0 +1,30 @@
+### CREATE new user
+POST http://localhost:8080/users
+Accept: application/json
+
+{
+	"first_name": "User 2",
+  "last_name": "User 2"
+}
+
+### GET all users
+GET http://localhost:8080/users
+Accept: application/json
+
+### GET all notes
+GET http://localhost:8080/users/notes
+Accept: application/json
+
+### GET spesified notes by user id
+GET http://localhost:8080/users/notes?userid=6d186030-b8a9-490c-8824-322771d616a2
+Accept: application/json
+
+### CREATE new note
+POST http://localhost:8080/users/notes?userid=cb882596-8c06-41d1-bd1a-8f66fafd660c
+Accept: application/json
+
+{
+  "title": "note1",
+  "body": "note1"
+}
+
