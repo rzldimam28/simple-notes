@@ -32,6 +32,7 @@ func (h *Handler) Users(w http.ResponseWriter, r *http.Request) {
 			WriteToResponse(w, 400, "Could not create User", nil)
 			return
 		}
+
 		id := uuid.NewString()
 
 		user := models.User{

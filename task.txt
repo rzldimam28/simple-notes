@@ -3,3 +3,19 @@
 3. User bisa lihat notes User by Id. (DONE)
 tapi Notes update/delete, hanya boleh ownernya.(DONE)
 4. User list (DONE).
+-------------------------------------------------
+
+Task 2 : 
+Refactor, menggunakan package gorilamux.
+.tree folder: 
+- Controller, pake parameter
+- Service
+- Route
+
+Task 3 : 
+Refactor, Menggunakan package mysql
+.tree folder:
+- Controller 
+- Service
+- Repository
+- Route
