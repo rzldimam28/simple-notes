@@ -6,6 +6,7 @@ import (
 	"time"
 
 	"github.com/google/uuid"
+	"github.com/gorilla/mux"
 	"github.com/rzldimam28/simple-notes/models"
 )
 
@@ -85,7 +86,9 @@ func (h *Handler) Notes(w http.ResponseWriter, r *http.Request) {
 				WriteToResponse(w, 500, err.Error(), nil)
 				return
 			}
-			id := r.URL.Query().Get("id")
+			vars := mux.Vars(r)
+			id := vars["id"]
+			// id := r.URL.Query().Get("id")
 			userId := r.Header.Get("User_ID")
 			
 			for i, note := range Notes {
@@ -104,7 +107,9 @@ func (h *Handler) Notes(w http.ResponseWriter, r *http.Request) {
 			WriteToResponse(w, http.StatusNotFound, "not found", nil)
 			return
 		case "DELETE":
-			id := r.URL.Query().Get("id")	
+			vars := mux.Vars(r)
+			id := vars["id"]
+			// id := r.URL.Query().Get("id")	
 			userId := r.Header.Get("User_ID")
 			for i, note := range Notes {
 				if note.Id == id {
@@ -128,7 +133,9 @@ func (h *Handler) UserNote(w http.ResponseWriter, r *http.Request) {
 	case "GET":
 		// do something here
 		var userId string
-		userId = r.URL.Query().Get("id")
+		// userId = r.URL.Query().Get("id")
+		vars := mux.Vars(r)
+		userId = vars["id"]
 		notes := []models.Note{}
 		for i,v := range Notes{
 			if v.UserId == userId{

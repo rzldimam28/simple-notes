@@ -6,9 +6,9 @@ tapi Notes update/delete, hanya boleh ownernya.(DONE)
 -------------------------------------------------
 
 Task 2 : 
-Refactor, menggunakan package gorilamux.
+Refactor, menggunakan package gorilamux. (DONE)
 .tree folder: 
-- Controller, pake parameter
+- Controller, pake parameter (DONE)
 - Service
 - Route
 
