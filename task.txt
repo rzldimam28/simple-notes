@@ -9,8 +9,8 @@ Task 2 :
 Refactor, menggunakan package gorilamux. (DONE)
 .tree folder: 
 - Controller, pake parameter (DONE)
-- Service
-- Route
+- Service (DONE)
+- Route (DONE)
 
 Task 3 : 
 Refactor, Menggunakan package mysql
