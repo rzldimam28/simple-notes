@@ -25,14 +25,15 @@ func main() {
 	userController := controller.UserController{UserService: &userService}
 
 	noteRepo := repository.NoteRepository{DB: db}
-	noteService := service.NoteService{NoteRepository: &noteRepo, Validate: validate}
+	noteService := service.NoteService{NoteRepository: &noteRepo, UserRepository: &userRepo, Validate: validate}
 	noteController := controller.NoteController{NoteService: &noteService}
 
 	r := mux.NewRouter()
 	
+	// routing for users
 	r.HandleFunc("/users", userController.List).Methods("GET")
-	// r.HandleFunc("/users/{id}", userController.Get).Methods("GET")
 	r.HandleFunc("/users", userController.Create).Methods("POST")
+	// routing for notes
 	r.HandleFunc("/users/notes", noteController.FindAll).Methods("GET")
 	r.HandleFunc("/users/notes", noteController.Create).Methods("POST")
 	r.HandleFunc("/users/notes/{id}", noteController.FindById).Methods("GET")

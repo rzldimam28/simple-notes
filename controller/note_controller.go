@@ -16,6 +16,9 @@ type NoteController struct {
 
 func (noteController *NoteController) Create(w http.ResponseWriter, r *http.Request) {
 	id := r.Header.Get("User_ID")
+	if len(id) <= 0 {
+		panic("Please Login First")
+	}
 	userId, _ := strconv.Atoi(id)
 
 	noteCreateRequest := web.NoteCreateRequest{}
@@ -37,7 +40,7 @@ func (noteController *NoteController) Update(w http.ResponseWriter, r *http.Requ
 	params := mux.Vars(r)
 	idString := params["id"]
 	noteId, _ := strconv.Atoi(idString)
-	
+
 	noteUpdateRequest := web.NoteUpdateRequest{}
 	helper.ReadFromRequestBody(r, &noteUpdateRequest)
 
