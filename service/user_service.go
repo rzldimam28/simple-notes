@@ -3,31 +3,35 @@ package service
 import (
 	"time"
 
-	"github.com/google/uuid"
-	"github.com/rzldimam28/simple-notes/models"
+	"github.com/go-playground/validator/v10"
+	"github.com/rzldimam28/simple-notes/helper"
+	"github.com/rzldimam28/simple-notes/models/entity"
+	"github.com/rzldimam28/simple-notes/models/web"
+	"github.com/rzldimam28/simple-notes/repository"
 )
 
-var Users = []models.User{}
-
 type UserService struct {	
+	UserRepository *repository.UserRepository
+	Validate *validator.Validate
 }
 
-func (u *UserService) Create(newUser models.User) (models.User, error){
-	id := uuid.NewString()
+func (userService *UserService) Create(request web.UserCreateRequest) web.UserResponse {
+	err := userService.Validate.Struct(request)
+	helper.PanicIfError(err)
 
-	user := models.User{
-		Id:        id,
-		FirstName: newUser.FirstName,
-		LastName:  newUser.LastName,
+	user := entity.User{
+		FirstName: request.FirstName,
+		LastName:  request.LastName,
 		CreatedAt: time.Now(),
 		UpdatedAt: time.Now(),
 	}
 
-	Users = append(Users, user)
+	newUser := userService.UserRepository.Save(user)
 
-	return user, nil
+	return helper.ToUserResponse(newUser)
 }
 
-func (u *UserService) Lists() []models.User{
-	return Users
+func (userService *UserService) Lists() []web.UserResponse {
+	users := userService.UserRepository.ListAll()	
+	return helper.ToUserResponses(users)
 }
