@@ -29,6 +29,8 @@ func main() {
 	noteController := controller.NoteController{NoteService: &noteService}
 
 	r := mux.NewRouter()
+
+	r.Use(PanicRecovery)
 	
 	// routing for users
 	r.HandleFunc("/users", userController.List).Methods("GET")
@@ -44,3 +46,31 @@ func main() {
 
 	log.Fatal(http.ListenAndServe("127.0.0.1:8080", r))
 }
+
+func PanicRecovery(h http.Handler) http.Handler{
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		defer func() {
+			err := recover()
+			if err != nil {
+				fmt.Fprintln(w, err)
+			}
+		}()
+
+		h.ServeHTTP(w,r)
+	})
+}
+
+// func Auth(h http.Handler) http.Handler{
+// 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+// 		userId := r.Header.Get("User_ID")
+// 		password := r.Header.Get("Password")
+		
+// 		if userId == "1"{
+// 			if password != "imam"{
+// 				fmt.Fprintln(w,"Salah Password")
+// 				return
+// 			}
+// 		}
+// 		h.ServeHTTP(w,r)
+// 	})
+// }

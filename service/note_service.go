@@ -1,6 +1,8 @@
 package service
 
 import (
+	"errors"
+	"fmt"
 	"time"
 
 	"github.com/go-playground/validator/v10"
@@ -35,16 +37,15 @@ func (noteService *NoteService) Update(request web.NoteUpdateRequest, userId int
 	err := noteService.Validate.Struct(request)
 	helper.PanicIfError(err)
 
-	user := noteService.UserRepository.ListAll()
-	userResponses := helper.ToUserResponses(user)
-	for _, user := range userResponses {
-		if userId != user.Id {
-			panic("Unauthorized")
-		} 
-	}
-	
+	user := noteService.UserRepository.GetById(userId)
 	note, err := noteService.NoteRepository.FindById(request.Id)
 	helper.PanicIfError(err)
+	if user.Id != note.UserId {
+		errs := fmt.Sprintf("User ID %d Not Authorized", userId)
+		err = errors.New(errs)
+		helper.PanicIfError(err)
+	}
+	
 	note.Title = request.Title
 	note.Content = request.Content
 	note.UpdatedAt = time.Now()
@@ -56,16 +57,15 @@ func (noteService *NoteService) Update(request web.NoteUpdateRequest, userId int
 
 
 func (noteService *NoteService) Delete(noteId int, userId int) {
-	user := noteService.UserRepository.ListAll()
-	userResponses := helper.ToUserResponses(user)
-	for _, user := range userResponses {
-		if userId != user.Id {
-			panic("Unauthorized")
-		} 
-	}
-
+	user := noteService.UserRepository.GetById(userId)
 	note, err := noteService.NoteRepository.FindById(noteId)
 	helper.PanicIfError(err)
+
+	if user.Id != note.UserId {
+		errs := fmt.Sprintf("User ID %d Not Authorized", userId)
+		err := errors.New(errs)
+		helper.PanicIfError(err)
+	}
 
 	noteService.NoteRepository.Delete(note)
 }

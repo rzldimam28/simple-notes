@@ -37,3 +37,16 @@ func (userRepo *UserRepository) ListAll() []entity.User {
 	}
 	return users
 }
+
+func (userRepo *UserRepository) GetById(userId int) (user entity.User) {
+	SQL := "SELECT id, first_name, last_name, created_at, updated_at FROM users where id = ?"
+	rows, err := userRepo.DB.Query(SQL, userId)
+	helper.PanicIfError(err)
+	defer rows.Close()
+
+	for rows.Next() {
+		err := rows.Scan(&user.Id, &user.FirstName, &user.LastName, &user.CreatedAt, &user.UpdatedAt)
+		helper.PanicIfError(err)
+	}
+	return user
+}
