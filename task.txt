@@ -1,5 +1,29 @@
+Go Session #1
 1. User , bisa buat notes. (DONE)
 2. User bisa lihat notes all user. (DONE)
 3. User bisa lihat notes User by Id. (DONE)
 tapi Notes update/delete, hanya boleh ownernya.(DONE)
 4. User list (DONE).
+-------------------------------------------------
+
+Task 5 : 
+Refactor, menggunakan package gorilamux. (DONE)
+.tree folder: 
+- Controller, pake parameter (DONE)
+- Service (DONE)
+- Route (DONE)
+
+Task 6 : 
+Refactor, Menggunakan package mysql (DONE)
+.tree folder:
+- Controller (DONE)
+- Service (DONE)
+- Repository (DONE)
+- Route (DONE)
+
+Task 7:
+- Buat endpoint baru utk Login
+- Pake JWT , untuk encode data user (id, name)
+
+Task 8:
+Pelajari Redis
