@@ -1,6 +1,6 @@
 package web
 
 type UserCreateRequest struct {
-	FirstName string `validate:"required" json:"first_name"`
-	LastName  string `validate:"required" json:"last_name"`
+	Username string `json:"username" validate:"required"`
+	Password string `json:"password" validate:"required"`
 }

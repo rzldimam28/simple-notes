@@ -8,8 +8,8 @@ import (
 func ToUserResponse(user entity.User) web.UserResponse {
 	return web.UserResponse{
 		Id: user.Id,
-		FirstName: user.FirstName,
-		LastName: user.LastName,
+		Username: user.Username,
+		Password: user.Password,
 		CreatedAt: user.CreatedAt,
 		UpdatedAt: user.UpdatedAt,
 	}

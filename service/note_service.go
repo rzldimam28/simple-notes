@@ -1,8 +1,6 @@
 package service
 
 import (
-	"errors"
-	"fmt"
 	"time"
 
 	"github.com/go-playground/validator/v10"
@@ -13,17 +11,16 @@ import (
 )
 
 type NoteService struct {
-	UserRepository *repository.UserRepository
 	NoteRepository *repository.NoteRepository
 	Validate *validator.Validate
 }
 
-func (noteService *NoteService) Create(request web.NoteCreateRequest, userId int) web.NoteResponse {	
+func (noteService *NoteService) Create(request web.NoteCreateRequest) web.NoteResponse {	
 	err := noteService.Validate.Struct(request)
 	helper.PanicIfError(err)
 
 	note := entity.Note{
-		UserId: userId,
+		UserId: request.UserId,
 		Title: request.Title,
 		Content: request.Content,
 		CreatedAt: time.Now(),
@@ -33,18 +30,12 @@ func (noteService *NoteService) Create(request web.NoteCreateRequest, userId int
 	return helper.ToNoteResponse(newNote)
 }
 
-func (noteService *NoteService) Update(request web.NoteUpdateRequest, userId int) web.NoteResponse {
+func (noteService *NoteService) Update(request web.NoteUpdateRequest) web.NoteResponse {
 	err := noteService.Validate.Struct(request)
 	helper.PanicIfError(err)
 
-	user := noteService.UserRepository.GetById(userId)
 	note, err := noteService.NoteRepository.FindById(request.Id)
 	helper.PanicIfError(err)
-	if user.Id != note.UserId {
-		errs := fmt.Sprintf("User ID %d Not Authorized", userId)
-		err = errors.New(errs)
-		helper.PanicIfError(err)
-	}
 	
 	note.Title = request.Title
 	note.Content = request.Content
@@ -54,18 +45,9 @@ func (noteService *NoteService) Update(request web.NoteUpdateRequest, userId int
 	return helper.ToNoteResponse(updatedNote)
 }
 
-
-
-func (noteService *NoteService) Delete(noteId int, userId int) {
-	user := noteService.UserRepository.GetById(userId)
+func (noteService *NoteService) Delete(noteId int) {
 	note, err := noteService.NoteRepository.FindById(noteId)
 	helper.PanicIfError(err)
-
-	if user.Id != note.UserId {
-		errs := fmt.Sprintf("User ID %d Not Authorized", userId)
-		err := errors.New(errs)
-		helper.PanicIfError(err)
-	}
 
 	noteService.NoteRepository.Delete(note)
 }

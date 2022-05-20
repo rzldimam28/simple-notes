@@ -15,16 +15,11 @@ type NoteController struct {
 }
 
 func (noteController *NoteController) Create(w http.ResponseWriter, r *http.Request) {
-	id := r.Header.Get("User_ID")
-	if len(id) <= 0 {
-		panic("Please Login First")
-	}
-	userId, _ := strconv.Atoi(id)
 
 	noteCreateRequest := web.NoteCreateRequest{}
 	helper.ReadFromRequestBody(r, &noteCreateRequest)
 
-	noteResponse := noteController.NoteService.Create(noteCreateRequest, userId)
+	noteResponse := noteController.NoteService.Create(noteCreateRequest)
 	webResponse := web.WebResponse{
 		Code: 200,
 		Status: "OK",
@@ -34,9 +29,6 @@ func (noteController *NoteController) Create(w http.ResponseWriter, r *http.Requ
 }
 
 func (noteController *NoteController) Update(w http.ResponseWriter, r *http.Request) {
-	id := r.Header.Get("User_ID")
-	userId, _ := strconv.Atoi(id)
-	
 	params := mux.Vars(r)
 	idString := params["id"]
 	noteId, _ := strconv.Atoi(idString)
@@ -46,7 +38,7 @@ func (noteController *NoteController) Update(w http.ResponseWriter, r *http.Requ
 
 	noteUpdateRequest.Id = noteId
 
-	noteResponse := noteController.NoteService.Update(noteUpdateRequest, userId)
+	noteResponse := noteController.NoteService.Update(noteUpdateRequest)
 	webResponse := web.WebResponse{
 		Code: 200,
 		Status: "OK",
@@ -56,14 +48,11 @@ func (noteController *NoteController) Update(w http.ResponseWriter, r *http.Requ
 }
 
 func (noteController *NoteController) Delete(w http.ResponseWriter, r *http.Request) {
-	id := r.Header.Get("User_ID")
-	userId, _ := strconv.Atoi(id)
-
 	params := mux.Vars(r)
 	idString := params["id"]
 	noteId, _ := strconv.Atoi(idString)
 
-	noteController.NoteService.Delete(noteId, userId)
+	noteController.NoteService.Delete(noteId)
 	webResponse := web.WebResponse{
 		Code: 200,
 		Status: "OK",

@@ -10,7 +10,7 @@ import (
 	"github.com/rzldimam28/simple-notes/repository"
 )
 
-type UserService struct {	
+type UserService struct {
 	UserRepository *repository.UserRepository
 	Validate *validator.Validate
 }
@@ -20,18 +20,23 @@ func (userService *UserService) Create(request web.UserCreateRequest) web.UserRe
 	helper.PanicIfError(err)
 
 	user := entity.User{
-		FirstName: request.FirstName,
-		LastName:  request.LastName,
+		Username: request.Username,
+		Password: request.Password,
 		CreatedAt: time.Now(),
 		UpdatedAt: time.Now(),
 	}
 
 	newUser := userService.UserRepository.Save(user)
-
 	return helper.ToUserResponse(newUser)
 }
 
-func (userService *UserService) Lists() []web.UserResponse {
-	users := userService.UserRepository.ListAll()	
+func (userService *UserService) Get(id int) web.UserResponse {
+	user, err := userService.UserRepository.Get(id)
+	helper.PanicIfError(err)
+	return helper.ToUserResponse(user)
+}
+
+func (userService *UserService) List() []web.UserResponse {
+	users := userService.UserRepository.List()
 	return helper.ToUserResponses(users)
 }
