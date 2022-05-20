@@ -19,7 +19,9 @@ func (noteController *NoteController) Create(w http.ResponseWriter, r *http.Requ
 	noteCreateRequest := web.NoteCreateRequest{}
 	helper.ReadFromRequestBody(r, &noteCreateRequest)
 
-	noteResponse := noteController.NoteService.Create(noteCreateRequest)
+	userId := helper.GetUserId(w, r)
+
+	noteResponse := noteController.NoteService.Create(noteCreateRequest, userId)
 	webResponse := web.WebResponse{
 		Code: 200,
 		Status: "OK",

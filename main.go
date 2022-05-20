@@ -35,10 +35,8 @@ func main() {
 
 	r.Use(middleware.PanicRecovery)
 
-	// home
-	r.HandleFunc("/", controller.HomeHandler).Methods("GET")
-
-	// login
+	// home and login
+	r.HandleFunc("/", loginController.HomeHandler).Methods("GET")
 	r.HandleFunc("/login", loginController.LoginHandler).Methods("POST")
 
 	// routing for users

@@ -2,7 +2,6 @@ package controller
 
 import (
 	"net/http"
-	"strconv"
 
 	"github.com/rzldimam28/simple-notes/helper"
 	"github.com/rzldimam28/simple-notes/middleware"
@@ -15,15 +14,24 @@ type LoginController struct {
 	UserService *service.UserService
 }
 
-func (LoginController *LoginController) LoginHandler(w http.ResponseWriter, r *http.Request) {
+func (loginController *LoginController) HomeHandler(w http.ResponseWriter, r *http.Request) {
+	webResponse := web.WebResponse{
+		Code: http.StatusOK,
+		Status: "OK",
+		Data: "Home Page",
+	}
+	helper.WriteToResponseBody(w, webResponse)
+}
+
+func (loginController *LoginController) LoginHandler(w http.ResponseWriter, r *http.Request) {
 	var u entity.Credential
 	helper.ReadFromRequestBody(r, &u)
 
-	id := r.Header.Get("User_ID")
-	idInt, _ := strconv.Atoi(id)
-	user := LoginController.UserService.Get(idInt)
+	// id := r.Header.Get("User_ID")
+	// idInt, _ := strconv.Atoi(id)
+	user := loginController.UserService.Get(u.Username)
 
-	if u.Username != user.Username {
+	if u.Username != user.Username || u.Password != user.Password {
 		webResponse := web.WebResponse{
 			Code: http.StatusUnauthorized,
 			Status: "Unauth",

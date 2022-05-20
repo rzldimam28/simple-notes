@@ -15,12 +15,12 @@ type NoteService struct {
 	Validate *validator.Validate
 }
 
-func (noteService *NoteService) Create(request web.NoteCreateRequest) web.NoteResponse {	
+func (noteService *NoteService) Create(request web.NoteCreateRequest, userId int) web.NoteResponse {	
 	err := noteService.Validate.Struct(request)
 	helper.PanicIfError(err)
 
 	note := entity.Note{
-		UserId: request.UserId,
+		UserId: userId,
 		Title: request.Title,
 		Content: request.Content,
 		CreatedAt: time.Now(),

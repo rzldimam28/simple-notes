@@ -23,9 +23,9 @@ func (userRepository *UserRepository) Save(user entity.User) entity.User {
 	return user
 }
 
-func (userRepository *UserRepository) Get(id int) (entity.User, error) {
-	SQL := "SELECT id, username, password, created_at, updated_at FROM users WHERE id = ?"
-	rows, err := userRepository.DB.Query(SQL, id)
+func (userRepository *UserRepository) Get(username string) (entity.User, error) {
+	SQL := "SELECT id, username, password, created_at, updated_at FROM users WHERE username = ?"
+	rows, err := userRepository.DB.Query(SQL, username)
 	helper.PanicIfError(err)
 	defer rows.Close()
 

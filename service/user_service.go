@@ -30,8 +30,8 @@ func (userService *UserService) Create(request web.UserCreateRequest) web.UserRe
 	return helper.ToUserResponse(newUser)
 }
 
-func (userService *UserService) Get(id int) web.UserResponse {
-	user, err := userService.UserRepository.Get(id)
+func (userService *UserService) Get(username string) web.UserResponse {
+	user, err := userService.UserRepository.Get(username)
 	helper.PanicIfError(err)
 	return helper.ToUserResponse(user)
 }
