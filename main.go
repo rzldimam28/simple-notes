@@ -9,6 +9,7 @@ import (
 	"github.com/gorilla/mux"
 	"github.com/rzldimam28/simple-notes/app"
 	"github.com/rzldimam28/simple-notes/controller"
+	"github.com/rzldimam28/simple-notes/middleware"
 	"github.com/rzldimam28/simple-notes/repository"
 	"github.com/rzldimam28/simple-notes/service"
 
@@ -20,57 +21,32 @@ func main() {
 	db := app.NewDB()
 	validate := validator.New()
 
-	userRepo := repository.UserRepository{DB: db}
-	userService := service.UserService{UserRepository: &userRepo, Validate: validate}
-	userController := controller.UserController{UserService: &userService}
+	userRepository := repository.NewUserRepository(db)
+	userService := service.NewUserService(userRepository, validate)
+	userController := controller.NewUserController(userService)
 
-	noteRepo := repository.NoteRepository{DB: db}
-	noteService := service.NoteService{NoteRepository: &noteRepo, UserRepository: &userRepo, Validate: validate}
-	noteController := controller.NoteController{NoteService: &noteService}
+	noteRepository := repository.NewNoteRepository(db)
+	noteService := service.NewNoteService(noteRepository, validate)
+	noteController := controller.NewNoteController(noteService)
 
 	r := mux.NewRouter()
 
-	r.Use(PanicRecovery)
+	r.Use(middleware.PanicRecovery)
 	
 	// routing for users
-	r.HandleFunc("/users", userController.List).Methods("GET")
-	r.HandleFunc("/users", userController.Create).Methods("POST")
+	userRoutes := r.PathPrefix("/users").Subrouter()
+	userRoutes.HandleFunc("", userController.Create).Methods("POST")
+	userRoutes.HandleFunc("", userController.List).Methods("GET")
+
 	// routing for notes
-	r.HandleFunc("/users/notes", noteController.FindAll).Methods("GET")
-	r.HandleFunc("/users/notes", noteController.Create).Methods("POST")
-	r.HandleFunc("/users/notes/{id}", noteController.FindById).Methods("GET")
-	r.HandleFunc("/users/notes/{id}", noteController.Update).Methods("PUT")
-	r.HandleFunc("/users/notes/{id}", noteController.Delete).Methods("DELETE")
+	noteRoutes := r.PathPrefix("/notes").Subrouter()
+	noteRoutes.HandleFunc("", noteController.FindAll).Methods("GET")
+	noteRoutes.HandleFunc("", noteController.Create).Methods("POST")
+	noteRoutes.HandleFunc("/{id}", noteController.FindById).Methods("GET")
+	noteRoutes.HandleFunc("/{id}", noteController.Update).Methods("PUT")
+	noteRoutes.HandleFunc("/{id}", noteController.Delete).Methods("DELETE")
 
 	fmt.Println("Server is running on port 8080...")
 
 	log.Fatal(http.ListenAndServe("127.0.0.1:8080", r))
 }
-
-func PanicRecovery(h http.Handler) http.Handler{
-	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		defer func() {
-			err := recover()
-			if err != nil {
-				fmt.Fprintln(w, err)
-			}
-		}()
-
-		h.ServeHTTP(w,r)
-	})
-}
-
-// func Auth(h http.Handler) http.Handler{
-// 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-// 		userId := r.Header.Get("User_ID")
-// 		password := r.Header.Get("Password")
-		
-// 		if userId == "1"{
-// 			if password != "imam"{
-// 				fmt.Fprintln(w,"Salah Password")
-// 				return
-// 			}
-// 		}
-// 		h.ServeHTTP(w,r)
-// 	})
-// }
