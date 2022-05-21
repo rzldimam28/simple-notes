@@ -15,25 +15,37 @@
 
 # 📌 Endpoints
 
+## 🧍‍♂️ USERS
+
+### `/users/login - POST` Login URL. Generate a Json Web Token. Example of request body:
+```json
+{
+  "username": "imamrizaldi",
+  "password": "donggala"
+}
+```
 ### `/users - POST` Create a new user. Example of request body:
 ```json
 {
-  "first_name": "Imam",
-  "last_name": "Rizaldi"
+  "username": "johndoe",
+  "password": "janedoe"
 }
 ```
 ### `/users - GET` Fetch all users
 
-### `users/notes/ - POST` Create new note. Example of request body:
+## ✏ NOTES
+All of notes endpoints will be needed a JSON WEB TOKEN Auth that generated from /login.
+
+### `/notes - POST` Create new note. Example of request body:
 ```json
 {
   "title": "Golang",
   "content" : "Tutorial Golang Dasar"
 }
 ```
-### `/users/notes - GET` Fetch all notes
-### `/users/notes/{id} - GET` Get note by ID
-### `/users/notes/{id} - PUT` Update note. Example of request body:
+### `/notes - GET` Fetch all notes
+### `/notes/{id} - GET` Get note by ID
+### `/notes/{id} - PUT` Update note. Example of request body:
 ```json
 {
   "title": "Golang",
@@ -44,6 +56,5 @@
 <br>
 
 # 🔜 Feature to Add:
-- JWT auth
-- Redis caching
-- API Spec (Swagger)
+- JWT auth (done✅)
+- Unit testing
