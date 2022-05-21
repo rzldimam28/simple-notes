@@ -3,6 +3,7 @@ package repository
 import (
 	"context"
 	"database/sql"
+	"errors"
 
 	"github.com/rzldimam28/simple-notes/helper"
 	"github.com/rzldimam28/simple-notes/models/entity"
@@ -45,16 +46,17 @@ func (userRepo *UserRepositoryImpl) ListAll(ctx context.Context) []entity.User {
 	return users
 }
 
-func (userRepo *UserRepositoryImpl) GetById(ctx context.Context, userId int) entity.User {
-	SQL := "SELECT id, username, password, created_at, updated_at FROM users where id = ?"
-	rows, err := userRepo.DB.QueryContext(ctx, SQL, userId)
+func (userRepo *UserRepositoryImpl) GetByUsername(ctx context.Context, username string) (entity.User, error) {
+	SQL := "SELECT id, username, password, created_at, updated_at FROM users where username = ?"
+	rows, err := userRepo.DB.QueryContext(ctx, SQL, username)
 	helper.PanicIfError(err)
 	defer rows.Close()
 
 	var user entity.User
-	for rows.Next() {
+	if rows.Next() {
 		err := rows.Scan(&user.Id, &user.Username, &user.Password, &user.CreatedAt, &user.UpdatedAt)
 		helper.PanicIfError(err)
+		return user, nil
 	}
-	return user
+	return user, errors.New("can not find user")
 }

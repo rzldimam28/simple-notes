@@ -9,4 +9,5 @@ import (
 type UserService interface {
 	Create(ctx context.Context, request web.UserCreateRequest) web.UserResponse
 	Lists(ctx context.Context) []web.UserResponse
+	GetByUsername(ctx context.Context, username string) web.UserResponse
 }

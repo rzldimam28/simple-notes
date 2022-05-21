@@ -9,5 +9,5 @@ import (
 type UserRepository interface {
 	Save(ctx context.Context, user entity.User) entity.User
 	ListAll(ctx context.Context) []entity.User
-	GetById(ctx context.Context, id int) entity.User
+	GetByUsername(ctx context.Context, username string) (entity.User, error)
 }

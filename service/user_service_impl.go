@@ -43,3 +43,9 @@ func (userService *UserServiceImpl) Lists(ctx context.Context) []web.UserRespons
 	users := userService.UserRepository.ListAll(ctx)	
 	return helper.ToUserResponses(users)
 }
+
+func (userService *UserServiceImpl) GetByUsername(ctx context.Context, username string) web.UserResponse {
+	user, err := userService.UserRepository.GetByUsername(ctx, username)
+	helper.PanicIfError(err)
+	return helper.ToUserResponse(user)
+}

@@ -15,6 +15,8 @@
 
 # 📌 Endpoints
 
+## 
+
 ### `/users - POST` Create a new user. Example of request body:
 ```json
 {

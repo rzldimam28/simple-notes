@@ -21,8 +21,10 @@ func NewNoteController(noteService service.NoteService) NoteController {
 }
 
 func (noteController *NoteControllerImpl) Create(w http.ResponseWriter, r *http.Request) {
-	id := r.Header.Get("User_ID")
-	userId, _ := strconv.Atoi(id)
+	// id := r.Header.Get("User_ID")
+	// userId, _ := strconv.Atoi(id)
+
+	userId := r.Context().Value("userId").(int)
 
 	noteCreateRequest := web.NoteCreateRequest{}
 	helper.ReadFromRequestBody(r, &noteCreateRequest)

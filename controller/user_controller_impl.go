@@ -39,3 +39,34 @@ func (userController *UserControllerImpl) List(w http.ResponseWriter, r *http.Re
 	}
 	helper.WriteToResponseBody(w, webResponse)
 }
+
+func (userController *UserControllerImpl) Login(w http.ResponseWriter, r *http.Request) {
+	var u web.Credentials
+	helper.ReadFromRequestBody(r, &u)
+	user := userController.UserService.GetByUsername(r.Context(), u.Username)
+	if u.Username != user.Username || u.Password != user.Password {
+		webResponse := web.WebResponse{
+			Code: http.StatusUnauthorized,
+			Status: "Wrong Username of Password",
+			Data: nil,
+		}
+		helper.WriteToResponseBody(w, webResponse)
+		return
+	}
+	token, err := helper.GenerateToken(user.Id)
+	if err != nil {
+		webResponse := web.WebResponse{
+			Code: http.StatusUnprocessableEntity,
+			Status: "Can Not Generate Token",
+			Data: nil,
+		}
+		helper.WriteToResponseBody(w, webResponse)
+		return
+	}
+	webResponse := web.WebResponse{
+		Code: http.StatusOK,
+		Status: "Success Generate Token",
+		Data: token,
+	}
+	helper.WriteToResponseBody(w, webResponse)
+}
