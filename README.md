@@ -34,6 +34,7 @@
 ### `/users - GET` Fetch all users
 
 ## ✏ NOTES
+All of notes endpoints will be needed a JSON WEB TOKEN Auth that generated from /login.
 
 ### `/notes - POST` Create new note. Example of request body:
 ```json
